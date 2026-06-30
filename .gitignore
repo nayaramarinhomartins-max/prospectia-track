@@ -1,0 +1,13 @@
+# Credenciais — NUNCA subir
+.env
+
+# Binários compilados
+prospectia-track
+*.exe
+
+# Go
+vendor/
+
+# OS
+.DS_Store
+Thumbs.db

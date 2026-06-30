@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ProspectIA Track</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ── */
+:root {
+  --blue-400:#60A5FA;--blue-500:#3B82F6;--blue-600:#2563EB;--blue-700:#1D4ED8;
+  --green:#10B981;--green-bg:#022C22;--green-border:#065F46;
+  --yellow:#F59E0B;--yellow-bg:#271700;--yellow-border:#78350F;
+  --red:#F87171;--red-bg:#1A0A0A;--red-border:#5C1A1A;
+  --purple:#8B5CF6;--purple-bg:#180D35;
+  --sidebar-w:232px;--topbar-h:62px;
+  --r:6px;--r-lg:10px;--r-xl:14px;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.08);
+  --shadow-md:0 4px 12px rgba(0,0,0,.15);
+  --transition:140ms ease;
+}
+[data-theme="dark"] {
+  --bg:#080E1C;--surface:#0F1829;--surface-2:#162035;--surface-3:#1C2941;
+  --border:#1F2E47;--border-2:#28395A;
+  --tx:#E8EEFF;--tx-2:#B0BEDD;--tx-3:#6A82A8;--tx-4:#3D5070;
+  --sidebar-bg:#0C1523;--sidebar-border:#182438;
+  --sidebar-hover:#162035;
+  --sidebar-active-bg:rgba(37,99,235,.15);
+  --sidebar-active-tx:#60A5FA;
+  --sidebar-tx:#8FA8CC;--sidebar-label:#3D5070;
+  --topbar-bg:#0C1523;
+}
+[data-theme="light"] {
+  --bg:#F4F6FB;--surface:#FFFFFF;--surface-2:#F0F3FA;--surface-3:#E8EEFA;
+  --border:#E2E7F3;--border-2:#CDD5ED;
+  --tx:#0D1526;--tx-2:#2D3A55;--tx-3:#5A6A8A;--tx-4:#8FA0BF;
+  --sidebar-bg:#FFFFFF;--sidebar-border:#E8EDF7;
+  --sidebar-hover:#F4F6FB;
+  --sidebar-active-bg:#EEF2FF;--sidebar-active-tx:#1D4ED8;
+  --sidebar-tx:#3D4D6A;--sidebar-label:#9AAAC5;
+  --topbar-bg:#FFFFFF;--green-bg:#D1FAE5;--green-border:#6EE7B7;
+  --red-bg:#FEE2E2;--red-border:#FECACA;--red:#EF4444;
+  --yellow-bg:#FEF3C7;--yellow-border:#FDE68A;
+  --purple-bg:#EDE9FE;
+}
+
+/* ── RESET ── */
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;font-size:13px}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+input,select,textarea{font-family:inherit}
+
+/* ── LOGIN ── */
+#loginPage {
+  min-height:100vh;display:grid;grid-template-columns:1fr 1fr;
+}
+.lp-left {
+  background:linear-gradient(150deg,#060D1F 0%,#0D1A3A 45%,#0A1830 70%,#071026 100%);
+  position:relative;overflow:hidden;
+  display:flex;flex-direction:column;justify-content:space-between;padding:44px 48px;
+}
+.lp-left::before {
+  content:'';position:absolute;inset:0;
+  background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);
+  background-size:40px 40px;pointer-events:none;
+}
+.lp-glow{position:absolute;border-radius:50%;pointer-events:none}
+.lp-glow-1{width:500px;height:500px;top:-150px;right:-100px;background:radial-gradient(circle,rgba(37,99,235,.22) 0%,transparent 65%)}
+.lp-glow-2{width:350px;height:350px;bottom:-80px;left:-60px;background:radial-gradient(circle,rgba(99,102,241,.18) 0%,transparent 65%)}
+.lp-logo{display:flex;align-items:center;gap:11px;position:relative;z-index:1}
+.lp-logo-icon{width:40px;height:40px;border-radius:10px;background:rgba(37,99,235,.25);border:1px solid rgba(99,153,255,.25);display:flex;align-items:center;justify-content:center}
+.lp-logo-text{font-size:20px;font-weight:800;color:#fff;letter-spacing:-.4px}
+.lp-logo-text em{font-style:normal;color:#7CB9FF}
+.lp-hero{position:relative;z-index:1}
+.lp-hero h2{font-size:34px;font-weight:800;color:#fff;line-height:1.18;letter-spacing:-.6px;margin-bottom:16px}
+.lp-hero h2 em{font-style:normal;color:#7CB9FF}
+.lp-hero p{font-size:15px;color:rgba(255,255,255,.52);line-height:1.65;max-width:360px}
+.lp-features{position:relative;z-index:1;display:flex;flex-direction:column;gap:12px}
+.lp-feature{display:flex;align-items:center;gap:12px;font-size:13px;color:rgba(255,255,255,.65)}
+.lp-feat-ic{width:30px;height:30px;border-radius:7px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;color:#7CB9FF;flex-shrink:0}
+.lp-right{display:flex;align-items:center;justify-content:center;padding:48px;background:var(--bg)}
+.lp-form-wrap{width:100%;max-width:360px}
+.lp-form-head{margin-bottom:28px}
+.lp-form-head h1{font-size:24px;font-weight:800;color:var(--tx);letter-spacing:-.4px;margin-bottom:5px}
+.lp-form-head p{font-size:13px;color:var(--tx-3);line-height:1.5}
+.lp-error{padding:10px 12px;margin-bottom:16px;background:var(--red-bg);border:1px solid var(--red-border);border-radius:var(--r);color:var(--red);font-size:12.5px;display:none}
+.lp-form{display:flex;flex-direction:column;gap:14px}
+.lp-fg{display:flex;flex-direction:column;gap:5px}
+.lp-lbl{font-size:12px;font-weight:600;color:var(--tx-2)}
+.lp-inp-wrap{position:relative}
+.lp-inp-ico{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--tx-4);pointer-events:none}
+.lp-inp{width:100%;height:44px;padding:0 13px 0 38px;border:1.5px solid var(--border);border-radius:var(--r-lg);background:var(--surface);color:var(--tx);font-size:13px;transition:border-color .15s,box-shadow .15s;outline:none}
+.lp-inp:focus{border-color:var(--blue-500);box-shadow:0 0 0 3px rgba(59,130,246,.12)}
+.lp-inp::placeholder{color:var(--tx-4)}
+.lp-btn{height:44px;width:100%;margin-top:4px;background:linear-gradient(135deg,#2563EB 0%,#1D4ED8 100%);color:#fff;border-radius:var(--r-lg);font-size:14px;font-weight:700;transition:opacity .15s;box-shadow:0 4px 14px rgba(37,99,235,.32);letter-spacing:-.1px}
+.lp-btn:hover{opacity:.9}
+.lp-btn:disabled{opacity:.45;cursor:not-allowed}
+
+/* ── APP SHELL ── */
+#app{display:none;min-height:100vh}
+.sidebar{position:fixed;top:0;left:0;width:var(--sidebar-w);height:100vh;background:var(--sidebar-bg);border-right:1px solid var(--sidebar-border);display:flex;flex-direction:column;z-index:100}
+.sb-logo{padding:18px 16px;border-bottom:1px solid var(--sidebar-border);display:flex;align-items:center;gap:10px}
+.sb-logo-icon{width:34px;height:34px;border-radius:9px;background:rgba(37,99,235,.2);border:1px solid rgba(99,153,255,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sb-logo-text{font-size:15px;font-weight:800;color:var(--tx);letter-spacing:-.3px}
+.sb-logo-text em{font-style:normal;color:var(--blue-400)}
+.sb-nav{flex:1;overflow-y:auto;padding:12px 8px}
+.sb-label{font-size:10px;font-weight:700;color:var(--sidebar-label);letter-spacing:.8px;text-transform:uppercase;padding:12px 10px 6px}
+.sb-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--r-lg);cursor:pointer;transition:background var(--transition);color:var(--sidebar-tx);font-weight:500;margin-bottom:2px}
+.sb-item:hover{background:var(--sidebar-hover)}
+.sb-item.active{background:var(--sidebar-active-bg);color:var(--sidebar-active-tx)}
+.sb-item svg{flex-shrink:0;opacity:.8}
+.sb-item.active svg{opacity:1}
+.sb-bottom{padding:12px 8px;border-top:1px solid var(--sidebar-border)}
+.sb-user{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--r-lg)}
+.sb-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#2563EB,#7C3AED);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
+.sb-user-info{flex:1;min-width:0}
+.sb-user-name{font-size:12px;font-weight:600;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-user-role{font-size:11px;color:var(--tx-3)}
+
+.topbar{position:fixed;top:0;left:var(--sidebar-w);right:0;height:var(--topbar-h);background:var(--topbar-bg);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:99}
+.tb-title{font-size:16px;font-weight:700;color:var(--tx)}
+.tb-actions{display:flex;align-items:center;gap:10px}
+
+.main-content{margin-left:var(--sidebar-w);padding-top:var(--topbar-h)}
+.page-content{padding:28px;max-width:1200px}
+
+/* ── COMPONENTS ── */
+.ph{padding:0 0 22px}
+.ph h1{font-size:22px;font-weight:800;letter-spacing:-.4px;color:var(--tx)}
+.ph p{font-size:13px;color:var(--tx-3);margin-top:4px}
+
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+.stat-c{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);padding:20px}
+.stat-label{font-size:12px;color:var(--tx-3);font-weight:500;margin-bottom:8px}
+.stat-val{font-size:30px;font-weight:800;letter-spacing:-.5px}
+.stat-sub{font-size:11px;color:var(--tx-4);margin-top:4px}
+.c-blue .stat-val{color:var(--blue-400)}
+.c-green .stat-val{color:var(--green)}
+.c-yellow .stat-val{color:var(--yellow)}
+.c-purple .stat-val{color:var(--purple)}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);overflow:hidden;margin-bottom:16px}
+.card-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border)}
+.card-title{font-size:14px;font-weight:700;color:var(--tx)}
+.card-subtitle{font-size:12px;color:var(--tx-3);margin-top:2px}
+.cp{padding:20px}
+
+table{width:100%;border-collapse:collapse}
+th{text-align:left;padding:11px 16px;font-size:11px;color:var(--tx-3);font-weight:600;text-transform:uppercase;letter-spacing:.6px;border-bottom:1px solid var(--border);background:var(--surface-2)}
+td{padding:13px 16px;font-size:13px;border-bottom:1px solid var(--border);color:var(--tx-2)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--surface-2)}
+
+.badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:99px;font-size:11px;font-weight:600}
+.badge-blue{background:rgba(59,130,246,.15);color:var(--blue-400)}
+.badge-green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
+.badge-yellow{background:var(--yellow-bg);color:var(--yellow);border:1px solid var(--yellow-border)}
+.badge-red{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
+.badge-purple{background:var(--purple-bg);color:var(--purple)}
+.badge-gray{background:var(--surface-2);color:var(--tx-3)}
+
+.btn{display:inline-flex;align-items:center;gap:6px;padding:0 14px;height:34px;border-radius:var(--r-lg);font-size:13px;font-weight:600;transition:all var(--transition);cursor:pointer;border:none}
+.btn-primary{background:linear-gradient(135deg,#2563EB,#1D4ED8);color:#fff;box-shadow:0 2px 8px rgba(37,99,235,.28)}
+.btn-primary:hover{opacity:.9}
+.btn-secondary{background:var(--surface-2);color:var(--tx-2);border:1px solid var(--border)}
+.btn-secondary:hover{background:var(--surface-3)}
+.btn-ghost{background:transparent;color:var(--tx-3)}
+.btn-ghost:hover{background:var(--surface-2);color:var(--tx)}
+.btn-danger{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
+
+.inp{width:100%;height:40px;padding:0 12px;border:1.5px solid var(--border);border-radius:var(--r-lg);background:var(--surface);color:var(--tx);font-size:13px;outline:none;transition:border-color .15s}
+.inp:focus{border-color:var(--blue-500);box-shadow:0 0 0 3px rgba(59,130,246,.1)}
+.inp::placeholder{color:var(--tx-4)}
+select.inp{cursor:pointer}
+textarea.inp{height:auto;padding:10px 12px;resize:vertical}
+
+.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.fg label{font-size:12px;font-weight:600;color:var(--tx-2)}
+
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);z-index:200;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);padding:28px;width:100%;max-width:480px;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+.modal h2{font-size:17px;font-weight:800;color:var(--tx);margin-bottom:4px}
+.modal p{font-size:13px;color:var(--tx-3);margin-bottom:20px}
+.modal-footer{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
+
+.empty-state{text-align:center;padding:48px 20px;color:var(--tx-3)}
+.empty-state svg{margin-bottom:12px;opacity:.4}
+.empty-state p{font-size:14px}
+
+.mono{font-family:monospace;font-size:12px;color:var(--tx-3)}
+.api-key-chip{background:var(--surface-3);border:1px solid var(--border);border-radius:6px;padding:2px 8px;font-family:monospace;font-size:11px;color:var(--blue-400)}
+
+.toast{position:fixed;bottom:24px;right:24px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);padding:14px 18px;box-shadow:var(--shadow-md);display:flex;align-items:center;gap:10px;z-index:300;transform:translateY(80px);opacity:0;transition:all .3s}
+.toast.show{transform:translateY(0);opacity:1}
+.toast-green{border-left:3px solid var(--green)}
+.toast-red{border-left:3px solid var(--red)}
+</style>
+</head>
+<body>
+
+<!-- ═══ LOGIN ═══ -->
+<div id="loginPage">
+  <div class="lp-left">
+    <div class="lp-glow lp-glow-1"></div>
+    <div class="lp-glow lp-glow-2"></div>
+    <div class="lp-logo">
+      <div class="lp-logo-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7CB9FF" stroke-width="2.5"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v3"/><rect x="9" y="11" width="14" height="10" rx="2"/><circle cx="12" cy="16" r="1"/></svg>
+      </div>
+      <span class="lp-logo-text">Prospect<em>IA</em> Track</span>
+    </div>
+    <div class="lp-hero">
+      <h2>Rastreio inteligente<br>para <em>sua logística</em></h2>
+      <p>Gerencie múltiplas transportadoras, notifique clientes por WhatsApp e e-mail, tudo em um painel centralizado.</p>
+    </div>
+    <div class="lp-features">
+      <div class="lp-feature">
+        <div class="lp-feat-ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+        Multi-transportadora com retry automático
+      </div>
+      <div class="lp-feature">
+        <div class="lp-feat-ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.56 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+        Notificações WhatsApp e e-mail automáticas
+      </div>
+      <div class="lp-feature">
+        <div class="lp-feat-ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+        Painel de logs e auditoria em tempo real
+      </div>
+    </div>
+  </div>
+  <div class="lp-right">
+    <div class="lp-form-wrap">
+      <div class="lp-form-head">
+        <h1>Entrar no painel</h1>
+        <p>Acesso restrito ao administrador do ProspectIA Track.</p>
+      </div>
+      <div class="lp-error" id="loginError">E-mail ou senha incorretos.</div>
+      <div class="lp-form">
+        <div class="lp-fg">
+          <label class="lp-lbl">E-mail</label>
+          <div class="lp-inp-wrap">
+            <span class="lp-inp-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+            <input class="lp-inp" type="email" id="loginEmail" placeholder="seu@email.com">
+          </div>
+        </div>
+        <div class="lp-fg">
+          <label class="lp-lbl">Senha</label>
+          <div class="lp-inp-wrap">
+            <span class="lp-inp-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+            <input class="lp-inp" type="password" id="loginSenha" placeholder="••••••••" onkeydown="if(event.key==='Enter')fazerLogin()">
+          </div>
+        </div>
+        <button class="lp-btn" id="loginBtn" onclick="fazerLogin()">Entrar no painel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ APP ═══ -->
+<div id="app">
+  <div class="sidebar">
+    <div class="sb-logo">
+      <div class="sb-logo-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="2.5"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v3"/><rect x="9" y="11" width="14" height="10" rx="2"/></svg>
+      </div>
+      <span class="sb-logo-text">Prospect<em>IA</em> Track</span>
+    </div>
+    <nav class="sb-nav">
+      <div class="sb-label">Principal</div>
+      <div class="sb-item active" onclick="navTo('dashboard')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </div>
+      <div class="sb-item" onclick="navTo('rastreios')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Rastreios
+      </div>
+      <div class="sb-label">Gestão</div>
+      <div class="sb-item" onclick="navTo('clientes')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Clientes
+      </div>
+      <div class="sb-item" onclick="navTo('transportadoras')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        Transportadoras
+      </div>
+      <div class="sb-label">Sistema</div>
+      <div class="sb-item" onclick="navTo('configuracoes')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M4.93 19.07l1.41-1.41M19.07 19.07l-1.41-1.41M12 2v2M12 20v2M2 12h2M20 12h2"/></svg>
+        Configurações
+      </div>
+      <div class="sb-item" onclick="navTo('logs')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Logs
+      </div>
+    </nav>
+    <div class="sb-bottom">
+      <div class="sb-user">
+        <div class="sb-avatar">N</div>
+        <div class="sb-user-info">
+          <div class="sb-user-name">Nayara</div>
+          <div class="sb-user-role">Administradora</div>
+        </div>
+        <button class="btn btn-ghost" style="padding:6px" title="Sair" onclick="sair()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="topbar">
+    <div class="tb-title" id="topbarTitle">Dashboard</div>
+    <div class="tb-actions">
+      <button class="btn btn-ghost" onclick="toggleTheme()" title="Alternar tema">
+        <svg id="themeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+      <button class="btn btn-primary" onclick="abrirModalCliente()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Novo cliente
+      </button>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <div class="page-content" id="pageContent"></div>
+  </div>
+</div>
+
+<!-- ═══ MODAL NOVO CLIENTE ═══ -->
+<div class="modal-overlay" id="modalCliente">
+  <div class="modal">
+    <h2>Novo cliente</h2>
+    <p>O sistema gera a API Key automaticamente.</p>
+    <div class="fg"><label>Nome</label><input class="inp" id="mcNome" placeholder="Nome do cliente"></div>
+    <div class="fg"><label>E-mail</label><input class="inp" id="mcEmail" type="email" placeholder="email@cliente.com"></div>
+    <div class="fg">
+      <label>Plano</label>
+      <select class="inp" id="mcPlano">
+        <option value="basic">Basic</option>
+        <option value="pro">Pro</option>
+        <option value="enterprise">Enterprise</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label>Senha de acesso ao portal</label>
+      <input class="inp" id="mcSenha" type="text" placeholder="Deixe em branco para gerar automaticamente">
+    </div>
+    <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-lg);padding:10px 12px;margin-bottom:4px">
+      <p style="font-size:12px;color:var(--tx-3)">O cliente acessa em <strong style="color:var(--tx)">/cliente</strong> e troca a senha no primeiro login.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="fecharModal('modalCliente')">Cancelar</button>
+      <button class="btn btn-primary" onclick="criarCliente()">Criar cliente</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MODAL NOVA TRANSPORTADORA ═══ -->
+<div class="modal-overlay" id="modalTransportadora">
+  <div class="modal">
+    <h2>Nova transportadora</h2>
+    <p>Configure os dados de integração da API.</p>
+    <div class="fg"><label>Nome</label><input class="inp" id="mtNome" placeholder="Ex: Total Express"></div>
+    <div class="fg">
+      <label>Tipo</label>
+      <select class="inp" id="mtTipo" onchange="toggleCustomFields()">
+        <option value="correios">Correios</option>
+        <option value="jadlog">Jadlog</option>
+        <option value="custom">Personalizada (Custom)</option>
+      </select>
+    </div>
+    <div id="customFields">
+      <div class="fg"><label>URL do endpoint <span style="color:var(--tx-3)">(use {codigo} onde vai o código)</span></label><input class="inp" id="mtUrl" placeholder="https://api.transportadora.com/track/{codigo}"></div>
+      <div class="fg">
+        <label>Tipo de autenticação</label>
+        <select class="inp" id="mtAuthTipo">
+          <option value="none">Sem autenticação</option>
+          <option value="bearer">Bearer Token</option>
+          <option value="api_key">API Key no header</option>
+        </select>
+      </div>
+      <div class="fg"><label>Token / Chave</label><input class="inp" id="mtAuthValor" placeholder="Seu token de acesso"></div>
+      <div class="fg"><label>Caminho do status no JSON <span style="color:var(--tx-3)">(ex: data.status)</span></label><input class="inp" id="mtJsonPath" placeholder="data.status"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="fecharModal('modalTransportadora')">Cancelar</button>
+      <button class="btn btn-primary" onclick="criarTransportadora()">Cadastrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MODAL INTEGRAÇÃO ═══ -->
+<div class="modal-overlay" id="modalIntegracao">
+  <div class="modal">
+    <h2>Conectar plataforma</h2>
+    <p>Cole o token de API da plataforma do seu cliente.</p>
+    <div class="fg">
+      <label>Cliente</label>
+      <select class="inp" id="miClienteID"><option value="">Carregando...</option></select>
+    </div>
+    <div class="fg">
+      <label>Plataforma</label>
+      <select class="inp" id="miPlataforma">
+        <option value="bling">Bling</option>
+        <option value="olist">Olist</option>
+        <option value="tiny">Tiny ERP</option>
+        <option value="nuvemshop">Nuvemshop</option>
+        <option value="shopify">Shopify</option>
+        <option value="woocommerce">WooCommerce</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label>Token / API Key da plataforma</label>
+      <input class="inp" id="miAPIKey" type="password" placeholder="Cole o token aqui">
+    </div>
+    <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-lg);padding:12px;margin-bottom:4px">
+      <p style="font-size:12px;color:var(--tx-3);line-height:1.6">
+        <strong style="color:var(--tx)">Como pegar o token:</strong><br>
+        • <strong>Bling:</strong> Configurações → Preferências → API → Gerar token<br>
+        • <strong>Olist:</strong> Integrações → API → Criar credencial<br>
+        • <strong>Tiny:</strong> Configurações → API → Token de acesso
+      </p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="fecharModal('modalIntegracao')">Cancelar</button>
+      <button class="btn btn-primary" onclick="salvarIntegracao()">Conectar</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+const TOKEN_KEY = 'pt_admin_token';
+let token = localStorage.getItem(TOKEN_KEY);
+
+const pageTitles = {
+  dashboard:'Dashboard', rastreios:'Rastreios', clientes:'Clientes',
+  transportadoras:'Transportadoras', configuracoes:'Configurações', logs:'Logs do Sistema'
+};
+
+// ── AUTH ──
+async function fazerLogin() {
+  const btn = document.getElementById('loginBtn');
+  const err = document.getElementById('loginError');
+  err.style.display = 'none';
+  btn.disabled = true; btn.textContent = 'Entrando...';
+  try {
+    const r = await fetch('/auth/login', {method:'POST',headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({email:document.getElementById('loginEmail').value, senha:document.getElementById('loginSenha').value})});
+    if (!r.ok) throw new Error();
+    const d = await r.json();
+    token = d.token;
+    localStorage.setItem(TOKEN_KEY, token);
+    mostrarApp();
+  } catch {
+    err.style.display = 'block';
+    btn.disabled = false; btn.textContent = 'Entrar no painel';
+  }
+}
+
+function sair() {
+  fetch('/auth/logout',{method:'POST',headers:{'X-Admin-Token':token}});
+  localStorage.removeItem(TOKEN_KEY);
+  token = null;
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('loginPage').style.display = 'grid';
+}
+
+function mostrarApp() {
+  document.getElementById('loginPage').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  navTo('dashboard');
+}
+
+// ── NAV ──
+function navTo(page) {
+  document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
+  const items = document.querySelectorAll('.sb-item');
+  items.forEach(i => { if(i.getAttribute('onclick')?.includes(page)) i.classList.add('active'); });
+  document.getElementById('topbarTitle').textContent = pageTitles[page] || page;
+  const pages = {dashboard:renderDashboard, rastreios:renderRastreios, clientes:renderClientes,
+    transportadoras:renderTransportadoras, configuracoes:renderConfiguracoes, logs:renderLogs};
+  if(pages[page]) pages[page]();
+}
+
+// ── API helper ──
+async function api(url, opts={}) {
+  const headers = {'Content-Type':'application/json','X-Admin-Token':token, ...opts.headers};
+  const r = await fetch(url, {...opts, headers});
+  if (r.status === 401) { sair(); return null; }
+  if (!r.ok) throw new Error(await r.text());
+  if (r.status === 204) return null;
+  return r.json();
+}
+
+function statusBadge(s) {
+  const sl = (s||'').toLowerCase();
+  if(sl.includes('trânsi') || sl.includes('transi')) return `<span class="badge badge-blue">${s}</span>`;
+  if(sl.includes('entregue')) return `<span class="badge badge-green">${s}</span>`;
+  if(sl.includes('entrega')) return `<span class="badge badge-yellow">${s}</span>`;
+  if(sl.includes('postado')) return `<span class="badge badge-gray">${s}</span>`;
+  return `<span class="badge badge-gray">${s}</span>`;
+}
+
+function dt(str) {
+  if(!str||str.startsWith('0001')) return '—';
+  return new Date(str).toLocaleString('pt-BR');
+}
+
+// ── PAGES ──
+async function renderDashboard() {
+  document.getElementById('pageContent').innerHTML = `
+    <div class="ph"><h1>Bom dia 👋</h1><p>Visão geral do ProspectIA Track</p></div>
+    <div class="stats-grid">
+      <div class="stat-c c-blue"><div class="stat-label">Clientes ativos</div><div class="stat-val" id="sClientes">—</div><div class="stat-sub">contas criadas</div></div>
+      <div class="stat-c c-green"><div class="stat-label">Rastreios</div><div class="stat-val" id="sRastreios">—</div><div class="stat-sub">consultas realizadas</div></div>
+      <div class="stat-c c-yellow"><div class="stat-label">Chamadas à API</div><div class="stat-val" id="sChamadas">—</div><div class="stat-sub">requisições totais</div></div>
+      <div class="stat-c c-purple"><div class="stat-label">Transportadoras</div><div class="stat-val" id="sTransp">—</div><div class="stat-sub">integradas</div></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div><div class="card-title">Últimos rastreios</div><div class="card-subtitle">Consultas mais recentes</div></div><button class="btn btn-ghost" onclick="navTo('rastreios')">Ver todos</button></div>
+      <table><thead><tr><th>Código</th><th>Status</th><th>Localização</th><th>Transportadora</th><th>Cliente</th><th>Data</th></tr></thead>
+      <tbody id="dashRastreios"><tr><td colspan="6" style="text-align:center;padding:24px;color:var(--tx-3)">Carregando...</td></tr></tbody></table>
+    </div>`;
+  const [stats, rastreios, transp] = await Promise.all([
+    api('/painel/stats'), api('/painel/rastreios'),
+    fetch('/transportadora').then(r=>r.json())
+  ]);
+  if(stats) {
+    document.getElementById('sClientes').textContent = stats.clientes;
+    document.getElementById('sRastreios').textContent = stats.rastreios;
+    document.getElementById('sChamadas').textContent = stats.chamadas;
+    document.getElementById('sTransp').textContent = transp?.length || 0;
+  }
+  const tbody = document.getElementById('dashRastreios');
+  if(!rastreios||!rastreios.length) { tbody.innerHTML=`<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--tx-3)">Nenhum rastreio ainda</td></tr>`; return; }
+  tbody.innerHTML = rastreios.slice(0,10).map(i=>`<tr>
+    <td class="mono">${i.codigo}</td><td>${statusBadge(i.status)}</td>
+    <td>${i.localizacao||'—'}</td><td>${i.transportadora}</td>
+    <td>${i.cliente}</td><td>${dt(i.criado_em)}</td></tr>`).join('');
+}
+
+async function renderRastreios() {
+  document.getElementById('pageContent').innerHTML = `
+    <div class="ph"><h1>Rastreios</h1><p>Todas as consultas realizadas pelos clientes</p></div>
+    <div class="card">
+      <table><thead><tr><th>Código</th><th>Status</th><th>Localização</th><th>Transportadora</th><th>Cliente</th><th>Data</th></tr></thead>
+      <tbody id="tblRastreios"><tr><td colspan="6" style="text-align:center;padding:24px;color:var(--tx-3)">Carregando...</td></tr></tbody></table>
+    </div>`;
+  const data = await api('/painel/rastreios');
+  const tbody = document.getElementById('tblRastreios');
+  if(!data||!data.length) { tbody.innerHTML=`<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--tx-3)">Nenhum rastreio ainda</td></tr>`; return; }
+  tbody.innerHTML = data.map(i=>`<tr>
+    <td class="mono">${i.codigo}</td><td>${statusBadge(i.status)}</td>
+    <td>${i.localizacao||'—'}</td><td>${i.transportadora}</td>
+    <td>${i.cliente}</td><td>${dt(i.criado_em)}</td></tr>`).join('');
+}
+
+async function renderClientes() {
+  document.getElementById('pageContent').innerHTML = `
+    <div class="ph" style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div><h1>Clientes</h1><p>Gerencie as contas e API Keys</p></div>
+      <button class="btn btn-primary" onclick="abrirModalCliente()">+ Novo cliente</button>
+    </div>
+    <div class="card">
+      <table><thead><tr><th>Nome</th><th>E-mail</th><th>Plano</th><th>Rastreios</th><th>Chamadas</th><th>API Key</th><th>Status</th></tr></thead>
+      <tbody id="tblClientes"><tr><td colspan="7" style="text-align:center;padding:24px;color:var(--tx-3)">Carregando...</td></tr></tbody></table>
+    </div>`;
+  const data = await api('/admin/clientes');
+  const tbody = document.getElementById('tblClientes');
+  if(!data||!data.length) { tbody.innerHTML=`<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--tx-3)">Nenhum cliente ainda</td></tr>`; return; }
+  tbody.innerHTML = data.map(c=>`<tr>
+    <td style="font-weight:600;color:var(--tx)">${c.nome}</td>
+    <td>${c.email}</td>
+    <td><span class="badge badge-purple">${c.plano}</span></td>
+    <td>${c.total_rastreios}</td><td>${c.total_chamadas}</td>
+    <td><span class="api-key-chip">${(c.api_key||'').substring(0,12)}...</span></td>
+    <td><span class="badge ${c.ativo?'badge-green':'badge-red'}">${c.ativo?'Ativo':'Suspenso'}</span></td>
+    <td><button class="btn btn-ghost" style="font-size:12px" onclick="resetarSenha(${c.id},'${c.nome}')">🔑 Senha</button></td></tr>`).join('');
+}
+
+async function renderTransportadoras() {
+  document.getElementById('pageContent').innerHTML = `
+    <div class="ph" style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div><h1>Transportadoras</h1><p>APIs de rastreio integradas ao sistema</p></div>
+      <button class="btn btn-primary" onclick="abrirModal('modalTransportadora')">+ Nova transportadora</button>
+    </div>
+    <div class="card">
+      <table><thead><tr><th>Nome</th><th>Tipo</th><th>Endpoint</th><th>Autenticação</th><th>Status</th></tr></thead>
+      <tbody id="tblTransp"><tr><td colspan="5" style="text-align:center;padding:24px;color:var(--tx-3)">Carregando...</td></tr></tbody></table>
+    </div>`;
+  const data = await fetch('/transportadora').then(r=>r.json());
+  const tbody = document.getElementById('tblTransp');
+  if(!data||!data.length) { tbody.innerHTML=`<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--tx-3)">Nenhuma transportadora ainda</td></tr>`; return; }
+  tbody.innerHTML = data.map(t=>`<tr>
+    <td style="font-weight:600;color:var(--tx)">${t.nome}</td>
+    <td><span class="badge badge-blue">${t.tipo}</span></td>
+    <td class="mono">${t.endpoint_url||'—'}</td>
+    <td>${t.auth_tipo||'none'}</td>
+    <td><span class="badge ${t.ativo?'badge-green':'badge-red'}">${t.ativo?'Ativa':'Inativa'}</span></td></tr>`).join('');
+}
+
+async function renderConfiguracoes() {
+  document.getElementById('pageContent').innerHTML = `
+    <div class="ph"><h1>Configurações</h1><p>Integrações, notificações e plataformas conectadas</p></div>
+
+    <!-- WhatsApp provider -->
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-head">
+        <div><div class="card-title">Canal de WhatsApp</div><div class="card-subtitle">Escolha o provider de notificações</div></div>
+      </div>
+      <div class="cp">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px">
+          <div class="provider-card active" id="pcEvolution" onclick="selecionarProvider('evolution')">
+            <div style="font-size:13px;font-weight:700;color:var(--tx);margin-bottom:4px">Evolution API</div>
+            <div style="font-size:12px;color:var(--tx-3)">Não-oficial · Risco médio de ban · Gratuito</div>
+            <div id="wppStatus" style="margin-top:10px;font-size:12px;color:var(--tx-3)">Verificando...</div>
+          </div>
+          <div class="provider-card" id="pc360" onclick="selecionarProvider('360dialog')">
+            <div style="font-size:13px;font-weight:700;color:var(--tx);margin-bottom:4px">360Dialog (oficial)</div>
+            <div style="font-size:12px;color:var(--tx-3)">WhatsApp Business API · Sem ban · Pago</div>
+            <div style="margin-top:10px;font-size:12px;color:var(--tx-3)">Requer conta verificada na 360Dialog</div>
+          </div>
+        </div>
+
+        <!-- Evolution: QR Code -->
+        <div id="sectionEvolution">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+            <span style="font-size:13px;font-weight:600;color:var(--tx)">Conexão da instância</span>
+            <button class="btn btn-secondary" onclick="buscarQR()">↻ Gerar QR Code</button>
+          </div>
+          <div id="qrArea" style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-xl);padding:28px;text-align:center;min-height:180px;display:flex;align-items:center;justify-content:center">
+            <span style="color:var(--tx-3);font-size:13px">Clique em "Gerar QR Code" para conectar o WhatsApp</span>
+          </div>
+        </div>
+
+        <!-- 360Dialog: API Key -->
+        <div id="section360" style="display:none">
+          <div class="fg"><label>API Key da 360Dialog</label><input class="inp" id="cf360Key" type="password" placeholder="Sua chave da conta 360Dialog"></div>
+          <button class="btn btn-primary" onclick="toast('Salvo!','green')">Salvar chave</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Templates -->
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-head"><div><div class="card-title">Template de mensagem</div><div class="card-subtitle">Texto enviado quando o status do pedido muda</div></div></div>
+      <div class="cp">
+        <div class="fg">
+          <label>WhatsApp / E-mail <span style="color:var(--tx-3)">· use {nome} {codigo} {status} {localizacao}</span></label>
+          <textarea class="inp" rows="5">📦 *Atualização do seu pedido*
+
+Olá, {nome}!
+
+*Código:* {codigo}
+*Status:* {status}
+*Local:* {localizacao}
+
+_ProspectIA Track_</textarea>
+        </div>
+        <button class="btn btn-primary" onclick="toast('Template salvo!','green')">Salvar template</button>
+      </div>
+    </div>
+
+    <!-- Integrações de plataforma -->
+    <div class="card">
+      <div class="card-head">
+        <div><div class="card-title">Integrações de plataforma</div><div class="card-subtitle">Conecte ERPs — pedidos enviados entram automaticamente</div></div>
+        <button class="btn btn-primary" onclick="abrirModal('modalIntegracao')">+ Conectar plataforma</button>
+      </div>
+      <div id="listaIntegracoes" style="padding:20px">
+        <div style="text-align:center;color:var(--tx-3);padding:20px">Carregando...</div>
+      </div>
+    </div>`;
+
+  // CSS provider cards
+  if (!document.getElementById('cfgStyle')) {
+    const s = document.createElement('style');
+    s.id = 'cfgStyle';
+    s.textContent = `.provider-card{border:2px solid var(--border);border-radius:var(--r-xl);padding:16px;cursor:pointer;transition:all .15s}
+    .provider-card:hover{border-color:var(--blue-500)}
+    .provider-card.active{border-color:var(--blue-500);background:rgba(37,99,235,.08)}`;
+    document.head.appendChild(s);
+  }
+
+  buscarStatusWpp();
+  carregarIntegracoes();
+}
+
+function selecionarProvider(p) {
+  document.getElementById('pcEvolution').classList.toggle('active', p==='evolution');
+  document.getElementById('pc360').classList.toggle('active', p==='360dialog');
+  document.getElementById('sectionEvolution').style.display = p==='evolution' ? 'block' : 'none';
+  document.getElementById('section360').style.display = p==='360dialog' ? 'block' : 'none';
+}
+
+async function buscarStatusWpp() {
+  try {
+    const d = await api('/admin/whatsapp/status');
+    if (!d) return;
+    const state = d.connectionStatus || d.instance?.state || 'desconhecido';
+    const el = document.getElementById('wppStatus');
+    if (!el) return;
+    if (state === 'open') {
+      el.innerHTML = '<span style="color:#10B981">● Conectado</span>';
+    } else {
+      el.innerHTML = `<span style="color:#F59E0B">● ${state}</span>`;
+    }
+  } catch {}
+}
+
+async function buscarQR() {
+  const area = document.getElementById('qrArea');
+  area.innerHTML = '<span style="color:var(--tx-3)">Buscando QR Code...</span>';
+  try {
+    const d = await api('/admin/whatsapp/qr');
+    if (!d) return;
+    // Evolution retorna base64 em d.base64 ou d.qrcode.base64
+    const b64 = d.base64 || d.qrcode?.base64 || d.qr;
+    if (b64) {
+      area.innerHTML = `
+        <div>
+          <img src="data:image/png;base64,${b64}" style="width:200px;height:200px;border-radius:8px">
+          <p style="color:var(--tx-3);font-size:12px;margin-top:10px">Escaneie com o WhatsApp do celular</p>
+          <button class="btn btn-secondary" style="margin-top:8px" onclick="buscarStatusWpp()">Já escaneei — verificar</button>
+        </div>`;
+    } else {
+      area.innerHTML = '<span style="color:#10B981;font-size:13px">● WhatsApp já está conectado</span>';
+    }
+  } catch(e) {
+    area.innerHTML = `<span style="color:var(--red);font-size:13px">Erro: ${e.message}</span>`;
+  }
+}
+
+async function carregarIntegracoes() {
+  const container = document.getElementById('listaIntegracoes');
+  if (!container) return;
+  const data = await api('/admin/integracoes');
+
+  const logos = {
+    bling: '🔵', olist: '🟠', tiny: '🟢', nuvemshop: '🟣', shopify: '🛍️', woocommerce: '🟤'
+  };
+
+  if (!data || !data.length) {
+    container.innerHTML = `
+      <div style="text-align:center;padding:32px;color:var(--tx-3)">
+        <div style="font-size:32px;margin-bottom:8px">🔌</div>
+        <p style="font-size:14px;margin-bottom:4px">Nenhuma plataforma conectada</p>
+        <p style="font-size:12px">Conecte o Bling, Olist ou outro ERP para sincronizar pedidos automaticamente</p>
+      </div>`;
+    return;
+  }
+
+  container.innerHTML = `<table>
+    <thead><tr><th>Plataforma</th><th>Cliente</th><th>Último sync</th><th>Status</th><th></th></tr></thead>
+    <tbody>${data.map(i=>`<tr>
+      <td style="font-weight:600">${logos[i.plataforma]||'🔗'} ${i.plataforma.charAt(0).toUpperCase()+i.plataforma.slice(1)}</td>
+      <td>${i.cliente}</td>
+      <td class="mono">${i.ultimo_sync ? dt(i.ultimo_sync) : 'Nunca'}</td>
+      <td><span class="badge ${i.ativo?'badge-green':'badge-gray'}">${i.ativo?'Ativo':'Pausado'}</span></td>
+      <td><button class="btn btn-ghost" style="font-size:12px" onclick="toggleIntegracao(${i.id},${!i.ativo})">${i.ativo?'Pausar':'Ativar'}</button></td>
+    </tr>`).join('')}</tbody></table>`;
+}
+
+async function toggleIntegracao(id, ativo) {
+  await api('/admin/integracao/toggle', {method:'POST', body:JSON.stringify({id, ativo})});
+  carregarIntegracoes();
+}
+
+async function renderLogs() {
+  document.getElementById('pageContent').innerHTML = `
+    <div class="ph"><h1>Logs do Sistema</h1><p>Todas as chamadas à API em tempo real — visível apenas para o administrador</p></div>
+    <div class="card">
+      <div class="card-head">
+        <div><div class="card-title">Registro de chamadas</div><div class="card-subtitle">Últimas 200 requisições</div></div>
+        <button class="btn btn-secondary" onclick="renderLogs()">↻ Atualizar</button>
+      </div>
+      <table><thead><tr><th>Endpoint</th><th>Cliente</th><th>Data/Hora</th></tr></thead>
+      <tbody id="tblLogs"><tr><td colspan="3" style="text-align:center;padding:24px;color:var(--tx-3)">Carregando...</td></tr></tbody></table>
+    </div>`;
+  const data = await api('/painel/logs');
+  const tbody = document.getElementById('tblLogs');
+  if(!data||!data.length) { tbody.innerHTML=`<tr><td colspan="3" style="text-align:center;padding:24px;color:var(--tx-3)">Nenhuma chamada registrada</td></tr>`; return; }
+  tbody.innerHTML = data.map(l=>`<tr>
+    <td><span class="badge badge-blue">${l.endpoint}</span></td>
+    <td>${l.cliente}</td>
+    <td class="mono">${dt(l.criado_em)}</td></tr>`).join('');
+}
+
+// ── MODALS ──
+function abrirModal(id) {
+  document.getElementById(id).classList.add('open');
+  if (id === 'modalIntegracao') carregarClientesNoModal();
+}
+function fecharModal(id) { document.getElementById(id).classList.remove('open'); }
+function abrirModalCliente() { abrirModal('modalCliente'); }
+document.querySelectorAll('.modal-overlay').forEach(m => m.addEventListener('click', e => { if(e.target===m) m.classList.remove('open'); }));
+
+function toggleCustomFields() {
+  const tipo = document.getElementById('mtTipo').value;
+  document.getElementById('customFields').style.display = tipo==='custom' ? 'block' : 'none';
+}
+
+async function salvarIntegracao() {
+  const cliente_id = parseInt(document.getElementById('miClienteID').value);
+  const plataforma = document.getElementById('miPlataforma').value;
+  const api_key = document.getElementById('miAPIKey').value;
+  if (!cliente_id || !api_key) return toast('Preencha todos os campos','red');
+  try {
+    await api('/admin/integracao', {method:'POST', body:JSON.stringify({cliente_id, plataforma, api_key})});
+    fecharModal('modalIntegracao');
+    toast('Plataforma conectada!','green');
+    carregarIntegracoes();
+  } catch(e) { toast(e.message,'red'); }
+}
+
+async function carregarClientesNoModal() {
+  const data = await api('/admin/clientes');
+  const sel = document.getElementById('miClienteID');
+  if (!sel || !data) return;
+  sel.innerHTML = data.map(c=>`<option value="${c.id}">${c.nome}</option>`).join('');
+}
+
+async function criarCliente() {
+  const nome=document.getElementById('mcNome').value;
+  const email=document.getElementById('mcEmail').value;
+  const plano=document.getElementById('mcPlano').value;
+  const senha=document.getElementById('mcSenha').value;
+  if(!nome||!email) return toast('Preencha nome e e-mail','red');
+  try {
+    const d = await api('/admin/cliente',{method:'POST',body:JSON.stringify({nome,email,plano,senha})});
+    fecharModal('modalCliente');
+    toast(`Cliente criado! Senha provisória: ${d.senha}`,'green');
+    navTo('clientes');
+  } catch(e) { toast(e.message,'red'); }
+}
+
+async function resetarSenha(id, nome) {
+  const senha = prompt(`Nova senha para ${nome}:`);
+  if (!senha || senha.length < 6) return toast('Senha muito curta','red');
+  await api('/admin/cliente/senha', {method:'POST', body:JSON.stringify({id, senha})});
+  toast(`Senha de ${nome} redefinida!`, 'green');
+}
+
+async function criarTransportadora() {
+  const nome=document.getElementById('mtNome').value;
+  const tipo=document.getElementById('mtTipo').value;
+  const endpoint_url=document.getElementById('mtUrl')?.value||'';
+  const auth_tipo=document.getElementById('mtAuthTipo')?.value||'none';
+  const auth_valor=document.getElementById('mtAuthValor')?.value||'';
+  const json_path=document.getElementById('mtJsonPath')?.value||'';
+  if(!nome) return toast('Informe o nome da transportadora','red');
+  try {
+    await api('/transportadora',{
+      method:'POST',
+      headers:{'X-Api-Key':'chave-teste-123'},
+      body:JSON.stringify({nome,tipo,endpoint_url,auth_tipo,auth_valor,json_path})
+    });
+    fecharModal('modalTransportadora');
+    toast('Transportadora cadastrada!','green');
+    navTo('transportadoras');
+  } catch(e) { toast(e.message,'red'); }
+}
+
+// ── TOAST ──
+function toast(msg, tipo='green') {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = `toast toast-${tipo} show`;
+  setTimeout(() => t.classList.remove('show'), 4000);
+}
+
+// ── THEME ──
+function toggleTheme() {
+  const h = document.documentElement;
+  h.setAttribute('data-theme', h.getAttribute('data-theme')==='dark' ? 'light' : 'dark');
+}
+
+// ── INIT ──
+if(token) { mostrarApp(); } else {
+  document.getElementById('loginPage').style.display = 'grid';
+}
+</script>
+</body>
+</html>

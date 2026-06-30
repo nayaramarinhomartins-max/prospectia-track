@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ProspectIA Track — Portal do Cliente</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --blue-400:#60A5FA;--blue-500:#3B82F6;--blue-600:#2563EB;--blue-700:#1D4ED8;
+  --green:#10B981;--green-bg:#022C22;--green-border:#065F46;
+  --yellow:#F59E0B;--yellow-bg:#271700;--yellow-border:#78350F;
+  --red:#F87171;--red-bg:#1A0A0A;--red-border:#5C1A1A;
+  --purple:#8B5CF6;--purple-bg:#180D35;
+  --sidebar-w:220px;--topbar-h:60px;
+  --r:6px;--r-lg:10px;--r-xl:14px;
+  --transition:140ms ease;
+}
+[data-theme="dark"]{
+  --bg:#080E1C;--surface:#0F1829;--surface-2:#162035;--surface-3:#1C2941;
+  --border:#1F2E47;--border-2:#28395A;
+  --tx:#E8EEFF;--tx-2:#B0BEDD;--tx-3:#6A82A8;--tx-4:#3D5070;
+  --sidebar-bg:#0C1523;--sidebar-border:#182438;
+  --sidebar-hover:#162035;--sidebar-active-bg:rgba(37,99,235,.15);
+  --sidebar-active-tx:#60A5FA;--sidebar-tx:#8FA8CC;--sidebar-label:#3D5070;
+  --topbar-bg:#0C1523;
+}
+[data-theme="light"]{
+  --bg:#F4F6FB;--surface:#FFFFFF;--surface-2:#F0F3FA;--surface-3:#E8EEFA;
+  --border:#E2E7F3;--border-2:#CDD5ED;
+  --tx:#0D1526;--tx-2:#2D3A55;--tx-3:#5A6A8A;--tx-4:#8FA0BF;
+  --sidebar-bg:#FFFFFF;--sidebar-border:#E8EDF7;
+  --sidebar-hover:#F4F6FB;--sidebar-active-bg:#EEF2FF;--sidebar-active-tx:#1D4ED8;
+  --sidebar-tx:#3D4D6A;--sidebar-label:#9AAAC5;--topbar-bg:#FFFFFF;
+  --green-bg:#D1FAE5;--green-border:#6EE7B7;
+  --red-bg:#FEE2E2;--red-border:#FECACA;--red:#EF4444;
+  --yellow-bg:#FEF3C7;--yellow-border:#FDE68A;--purple-bg:#EDE9FE;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;font-size:13px}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+input,select,textarea{font-family:inherit}
+
+/* LOGIN */
+#loginPage{min-height:100vh;display:grid;grid-template-columns:1fr 1fr}
+.lp-left{background:linear-gradient(150deg,#060D1F 0%,#0D1A3A 45%,#0A1830 70%,#071026 100%);position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;padding:44px 48px}
+.lp-left::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none}
+.glow{position:absolute;border-radius:50%;pointer-events:none}
+.glow-1{width:500px;height:500px;top:-150px;right:-100px;background:radial-gradient(circle,rgba(37,99,235,.22) 0%,transparent 65%)}
+.glow-2{width:350px;height:350px;bottom:-80px;left:-60px;background:radial-gradient(circle,rgba(99,102,241,.18) 0%,transparent 65%)}
+.lp-logo{display:flex;align-items:center;gap:11px;position:relative;z-index:1}
+.lp-logo-ic{width:40px;height:40px;border-radius:10px;background:rgba(37,99,235,.25);border:1px solid rgba(99,153,255,.25);display:flex;align-items:center;justify-content:center}
+.lp-logo-tx{font-size:20px;font-weight:800;color:#fff;letter-spacing:-.4px}
+.lp-logo-tx em{font-style:normal;color:#7CB9FF}
+.lp-hero{position:relative;z-index:1}
+.lp-hero h2{font-size:32px;font-weight:800;color:#fff;line-height:1.18;letter-spacing:-.6px;margin-bottom:14px}
+.lp-hero h2 em{font-style:normal;color:#7CB9FF}
+.lp-hero p{font-size:14px;color:rgba(255,255,255,.5);line-height:1.65;max-width:360px}
+.lp-features{position:relative;z-index:1;display:flex;flex-direction:column;gap:10px}
+.lp-feat{display:flex;align-items:center;gap:12px;font-size:13px;color:rgba(255,255,255,.6)}
+.lp-feat-ic{width:30px;height:30px;border-radius:7px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;color:#7CB9FF;flex-shrink:0}
+.lp-right{display:flex;align-items:center;justify-content:center;padding:48px;background:var(--bg)}
+.lp-form-wrap{width:100%;max-width:360px}
+.lp-head{margin-bottom:28px}
+.lp-head h1{font-size:24px;font-weight:800;color:var(--tx);letter-spacing:-.4px;margin-bottom:5px}
+.lp-head p{font-size:13px;color:var(--tx-3);line-height:1.5}
+.lp-error{padding:10px 12px;margin-bottom:16px;background:var(--red-bg);border:1px solid var(--red-border);border-radius:var(--r);color:var(--red);font-size:12.5px;display:none}
+.lp-form{display:flex;flex-direction:column;gap:14px}
+.fg-l{display:flex;flex-direction:column;gap:5px}
+.fg-l label{font-size:12px;font-weight:600;color:var(--tx-2)}
+.inp-wrap{position:relative}
+.inp-ico{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--tx-4);pointer-events:none}
+.lp-inp{width:100%;height:44px;padding:0 13px 0 38px;border:1.5px solid var(--border);border-radius:var(--r-lg);background:var(--surface);color:var(--tx);font-size:13px;transition:border-color .15s;outline:none}
+.lp-inp:focus{border-color:var(--blue-500);box-shadow:0 0 0 3px rgba(59,130,246,.12)}
+.lp-inp::placeholder{color:var(--tx-4)}
+.lp-btn{height:44px;width:100%;margin-top:4px;background:linear-gradient(135deg,#2563EB,#1D4ED8);color:#fff;border-radius:var(--r-lg);font-size:14px;font-weight:700;transition:opacity .15s;box-shadow:0 4px 14px rgba(37,99,235,.32)}
+.lp-btn:hover{opacity:.9}
+.lp-btn:disabled{opacity:.45;cursor:not-allowed}
+
+/* MODAL TROCAR SENHA */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);z-index:200;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);padding:28px;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+.modal h2{font-size:17px;font-weight:800;color:var(--tx);margin-bottom:4px}
+.modal p{font-size:13px;color:var(--tx-3);margin-bottom:20px;line-height:1.5}
+.modal-footer{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
+
+/* APP */
+#app{display:none;min-height:100vh}
+.sidebar{position:fixed;top:0;left:0;width:var(--sidebar-w);height:100vh;background:var(--sidebar-bg);border-right:1px solid var(--sidebar-border);display:flex;flex-direction:column;z-index:100}
+.sb-logo{padding:16px;border-bottom:1px solid var(--sidebar-border);display:flex;align-items:center;gap:10px}
+.sb-logo-ic{width:32px;height:32px;border-radius:8px;background:rgba(37,99,235,.2);border:1px solid rgba(99,153,255,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sb-logo-tx{font-size:14px;font-weight:800;color:var(--tx);letter-spacing:-.3px}
+.sb-logo-tx em{font-style:normal;color:var(--blue-400)}
+.sb-nav{flex:1;overflow-y:auto;padding:10px 8px}
+.sb-label{font-size:10px;font-weight:700;color:var(--sidebar-label);letter-spacing:.8px;text-transform:uppercase;padding:12px 10px 6px}
+.sb-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--r-lg);cursor:pointer;transition:background var(--transition);color:var(--sidebar-tx);font-weight:500;margin-bottom:2px}
+.sb-item:hover{background:var(--sidebar-hover)}
+.sb-item.active{background:var(--sidebar-active-bg);color:var(--sidebar-active-tx)}
+.sb-bottom{padding:12px 8px;border-top:1px solid var(--sidebar-border)}
+.sb-user{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--r-lg)}
+.sb-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#2563EB,#7C3AED);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
+.sb-user-info{flex:1;min-width:0}
+.sb-user-name{font-size:12px;font-weight:600;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-user-role{font-size:11px;color:var(--tx-3)}
+.topbar{position:fixed;top:0;left:var(--sidebar-w);right:0;height:var(--topbar-h);background:var(--topbar-bg);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 24px;z-index:99}
+.tb-title{font-size:15px;font-weight:700;color:var(--tx)}
+.tb-actions{display:flex;align-items:center;gap:10px}
+.main-content{margin-left:var(--sidebar-w);padding-top:var(--topbar-h)}
+.page-content{padding:24px;max-width:1000px}
+
+/* COMPONENTS */
+.ph{padding:0 0 20px}
+.ph h1{font-size:21px;font-weight:800;letter-spacing:-.4px}
+.ph p{font-size:13px;color:var(--tx-3);margin-top:4px}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+.stat-c{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);padding:18px}
+.stat-label{font-size:12px;color:var(--tx-3);font-weight:500;margin-bottom:6px}
+.stat-val{font-size:28px;font-weight:800;letter-spacing:-.5px}
+.c-blue .stat-val{color:var(--blue-400)}
+.c-green .stat-val{color:var(--green)}
+.c-purple .stat-val{color:var(--purple)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);overflow:hidden;margin-bottom:16px}
+.card-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border)}
+.card-title{font-size:14px;font-weight:700;color:var(--tx)}
+.card-sub{font-size:12px;color:var(--tx-3);margin-top:2px}
+.cp{padding:18px}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;padding:10px 14px;font-size:11px;color:var(--tx-3);font-weight:600;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border);background:var(--surface-2)}
+td{padding:12px 14px;font-size:13px;border-bottom:1px solid var(--border);color:var(--tx-2)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--surface-2)}
+.badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:99px;font-size:11px;font-weight:600}
+.badge-blue{background:rgba(59,130,246,.15);color:var(--blue-400)}
+.badge-green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
+.badge-yellow{background:var(--yellow-bg);color:var(--yellow);border:1px solid var(--yellow-border)}
+.badge-gray{background:var(--surface-2);color:var(--tx-3)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:0 14px;height:34px;border-radius:var(--r-lg);font-size:13px;font-weight:600;transition:all var(--transition);cursor:pointer;border:none}
+.btn-primary{background:linear-gradient(135deg,#2563EB,#1D4ED8);color:#fff;box-shadow:0 2px 8px rgba(37,99,235,.28)}
+.btn-primary:hover{opacity:.9}
+.btn-secondary{background:var(--surface-2);color:var(--tx-2);border:1px solid var(--border)}
+.btn-ghost{background:transparent;color:var(--tx-3)}
+.btn-ghost:hover{background:var(--surface-2);color:var(--tx)}
+.inp{width:100%;height:40px;padding:0 12px;border:1.5px solid var(--border);border-radius:var(--r-lg);background:var(--surface);color:var(--tx);font-size:13px;outline:none;transition:border-color .15s}
+.inp:focus{border-color:var(--blue-500);box-shadow:0 0 0 3px rgba(59,130,246,.1)}
+.inp::placeholder{color:var(--tx-4)}
+.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.fg label{font-size:12px;font-weight:600;color:var(--tx-2)}
+.mono{font-family:monospace;font-size:12px}
+.api-key-box{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-lg);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.api-key-val{font-family:monospace;font-size:13px;color:var(--blue-400);word-break:break-all;flex:1}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);padding:12px 16px;box-shadow:0 4px 20px rgba(0,0,0,.2);display:flex;align-items:center;gap:10px;z-index:300;transform:translateY(80px);opacity:0;transition:all .3s}
+.toast.show{transform:translateY(0);opacity:1}
+.toast-green{border-left:3px solid var(--green)}
+.toast-red{border-left:3px solid var(--red)}
+.plan-badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:700;background:var(--purple-bg);color:var(--purple);text-transform:uppercase;letter-spacing:.5px}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginPage">
+  <div class="lp-left">
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
+    <div class="lp-logo">
+      <div class="lp-logo-ic">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7CB9FF" stroke-width="2.5"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v3"/><rect x="9" y="11" width="14" height="10" rx="2"/></svg>
+      </div>
+      <span class="lp-logo-tx">Prospect<em>IA</em> Track</span>
+    </div>
+    <div class="lp-hero">
+      <h2>Seu painel de<br><em>rastreamento</em></h2>
+      <p>Acompanhe seus pedidos, acesse sua API Key e configure suas notificações.</p>
+    </div>
+    <div class="lp-features">
+      <div class="lp-feat">
+        <div class="lp-feat-ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+        Histórico completo de rastreios
+      </div>
+      <div class="lp-feat">
+        <div class="lp-feat-ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+        Sua API Key para integrar
+      </div>
+      <div class="lp-feat">
+        <div class="lp-feat-ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.56 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+        Notificações WhatsApp e e-mail
+      </div>
+    </div>
+  </div>
+  <div class="lp-right">
+    <div class="lp-form-wrap">
+      <div class="lp-head">
+        <h1>Acessar minha conta</h1>
+        <p>Use o e-mail e senha fornecidos pela ProspectIA Track.</p>
+      </div>
+      <div class="lp-error" id="loginError">E-mail ou senha incorretos.</div>
+      <div class="lp-form">
+        <div class="fg-l">
+          <label>E-mail</label>
+          <div class="inp-wrap">
+            <span class="inp-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+            <input class="lp-inp" type="email" id="loginEmail" placeholder="seu@email.com">
+          </div>
+        </div>
+        <div class="fg-l">
+          <label>Senha</label>
+          <div class="inp-wrap">
+            <span class="inp-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+            <input class="lp-inp" type="password" id="loginSenha" placeholder="••••••••" onkeydown="if(event.key==='Enter')fazerLogin()">
+          </div>
+        </div>
+        <button class="lp-btn" id="loginBtn" onclick="fazerLogin()">Entrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL TROCAR SENHA -->
+<div class="modal-overlay" id="modalSenha">
+  <div class="modal">
+    <h2>Defina sua senha</h2>
+    <p>Este é seu primeiro acesso. Crie uma senha pessoal para continuar.</p>
+    <div class="fg"><label>Nova senha</label><input class="inp" type="password" id="novaSenha" placeholder="Mínimo 6 caracteres"></div>
+    <div class="fg"><label>Confirmar senha</label><input class="inp" type="password" id="confirmarSenha" placeholder="Repita a senha"></div>
+    <div class="lp-error" id="senhaError" style="display:none;margin-bottom:0">As senhas não conferem.</div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" onclick="trocarSenha()">Salvar senha</button>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="sidebar">
+    <div class="sb-logo">
+      <div class="sb-logo-ic">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="2.5"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v3"/><rect x="9" y="11" width="14" height="10" rx="2"/></svg>
+      </div>
+      <span class="sb-logo-tx">Prospect<em>IA</em> Track</span>
+    </div>
+    <nav class="sb-nav">
+      <div class="sb-label">Menu</div>
+      <div class="sb-item active" onclick="navTo('dashboard')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </div>
+      <div class="sb-item" onclick="navTo('rastreios')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Meus Rastreios
+      </div>
+      <div class="sb-item" onclick="navTo('apikey')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+        Minha API Key
+      </div>
+      <div class="sb-item" onclick="navTo('configuracoes')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M4.93 19.07l1.41-1.41M19.07 19.07l-1.41-1.41M12 2v2M12 20v2M2 12h2M20 12h2"/></svg>
+        Configurações
+      </div>
+    </nav>
+    <div class="sb-bottom">
+      <div class="sb-user">
+        <div class="sb-avatar" id="sbAvatar">?</div>
+        <div class="sb-user-info">
+          <div class="sb-user-name" id="sbNome">—</div>
+          <div class="sb-user-role" id="sbPlano">—</div>
+        </div>
+        <button class="btn btn-ghost" style="padding:6px" onclick="sair()" title="Sair">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="topbar">
+    <div class="tb-title" id="topbarTitle">Dashboard</div>
+    <div class="tb-actions">
+      <button class="btn btn-ghost" onclick="toggleTheme()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+      <a href="/rastreio" target="_blank" class="btn btn-secondary">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Página de rastreio
+      </a>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <div class="page-content" id="pageContent"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const TOKEN_KEY = 'pt_cliente_token';
+const INFO_KEY  = 'pt_cliente_info';
+let token = localStorage.getItem(TOKEN_KEY);
+let perfil = JSON.parse(localStorage.getItem(INFO_KEY) || 'null');
+
+const titles = {dashboard:'Dashboard', rastreios:'Meus Rastreios', apikey:'Minha API Key', configuracoes:'Configurações'};
+
+async function fazerLogin() {
+  const btn = document.getElementById('loginBtn');
+  const err = document.getElementById('loginError');
+  err.style.display = 'none';
+  btn.disabled = true; btn.textContent = 'Entrando...';
+  try {
+    const r = await fetch('/cliente/login', {method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email:document.getElementById('loginEmail').value, senha:document.getElementById('loginSenha').value})
+    });
+    if (!r.ok) throw new Error();
+    const d = await r.json();
+    token = d.token;
+    perfil = d;
+    localStorage.setItem(TOKEN_KEY, token);
+    localStorage.setItem(INFO_KEY, JSON.stringify(d));
+    if (!d.senha_alterada) {
+      document.getElementById('modalSenha').classList.add('open');
+    } else {
+      mostrarApp();
+    }
+  } catch {
+    err.style.display = 'block';
+    btn.disabled = false; btn.textContent = 'Entrar';
+  }
+}
+
+async function trocarSenha() {
+  const nova = document.getElementById('novaSenha').value;
+  const conf = document.getElementById('confirmarSenha').value;
+  const err  = document.getElementById('senhaError');
+  err.style.display = 'none';
+  if (nova !== conf) { err.textContent = 'As senhas não conferem.'; err.style.display = 'block'; return; }
+  if (nova.length < 6) { err.textContent = 'Mínimo 6 caracteres.'; err.style.display = 'block'; return; }
+  await fetch('/cliente/senha', {method:'POST',
+    headers:{'Content-Type':'application/json','X-Cliente-Token':token},
+    body:JSON.stringify({senha_nova: nova})
+  });
+  document.getElementById('modalSenha').classList.remove('open');
+  perfil.senha_alterada = true;
+  localStorage.setItem(INFO_KEY, JSON.stringify(perfil));
+  mostrarApp();
+}
+
+function mostrarApp() {
+  document.getElementById('loginPage').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  const inicial = (perfil?.nome || '?')[0].toUpperCase();
+  document.getElementById('sbAvatar').textContent = inicial;
+  document.getElementById('sbNome').textContent = perfil?.nome || '';
+  document.getElementById('sbPlano').textContent = (perfil?.plano || '').toUpperCase();
+  navTo('dashboard');
+}
+
+function sair() {
+  fetch('/cliente/logout', {method:'POST', headers:{'X-Cliente-Token':token}});
+  localStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem(INFO_KEY);
+  token = null; perfil = null;
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('loginPage').style.display = 'grid';
+}
+
+function navTo(page) {
+  document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(i => { if(i.getAttribute('onclick')?.includes(page)) i.classList.add('active'); });
+  document.getElementById('topbarTitle').textContent = titles[page] || page;
+  ({dashboard:renderDashboard, rastreios:renderRastreios, apikey:renderApiKey, configuracoes:renderConfig})[page]?.();
+}
+
+async function api(url, opts={}) {
+  const r = await fetch(url, {...opts, headers:{'Content-Type':'application/json','X-Cliente-Token':token,...(opts.headers||{})}});
+  if (r.status === 401) { sair(); return null; }
+  if (r.status === 204) return null;
+  return r.json();
+}
+
+function statusBadge(s) {
+  const sl = (s||'').toLowerCase();
+  if(sl.includes('entregue')) return `<span class="badge badge-green">${s}</span>`;
+  if(sl.includes('trânsi')||sl.includes('transi')) return `<span class="badge badge-blue">${s}</span>`;
+  if(sl.includes('entrega')) return `<span class="badge" style="background:var(--yellow-bg);color:var(--yellow)">${s}</span>`;
+  return `<span class="badge badge-gray">${s}</span>`;
+}
+
+function dt(s) {
+  if(!s||s.startsWith('0001')) return '—';
+  return new Date(s).toLocaleString('pt-BR');
+}
+
+async function renderDashboard() {
+  document.getElementById('pageContent').innerHTML = `
+    <div class="ph"><h1>Olá, ${perfil?.nome?.split(' ')[0] || ''} 👋</h1><p>Visão geral da sua conta ProspectIA Track</p></div>
+    <div class="stats-grid">
+      <div class="stat-c c-blue"><div class="stat-label">Rastreios</div><div class="stat-val" id="sR">—</div></div>
+      <div class="stat-c c-green"><div class="stat-label">Chamadas à API</div><div class="stat-val" id="sC">—</div></div>
+      <div class="stat-c c-purple"><div class="stat-label">Webhooks</div><div class="stat-val" id="sW">—</div></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div><div class="card-title">Últimos rastreios</div><div class="card-sub">10 mais recentes</div></div><button class="btn btn-ghost" onclick="navTo('rastreios')">Ver todos</button></div>
+      <table><thead><tr><th>Código</th><th>Status</th><th>Localização</th><th>Destinatário</th><th>Data</th></tr></thead>
+      <tbody id="dashR"><tr><td colspan="5" style="text-align:center;padding:20px;color:var(--tx-3)">Carregando...</td></tr></tbody></table>
+    </div>`;
+  const [stats, rastreios] = await Promise.all([api('/cliente/stats'), api('/cliente/rastreios')]);
+  if(stats) { document.getElementById('sR').textContent=stats.rastreios; document.getElementById('sC').textContent=stats.chamadas; document.getElementById('sW').textContent=stats.webhooks; }
+  const tbody = document.getElementById('dashR');
+  if(!rastreios?.length) { tbody.innerHTML=`<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--tx-3)">Nenhum rastreio ainda</td></tr>`; return; }
+  tbody.innerHTML = rastreios.slice(0,10).map(i=>`<tr>
+    <td class="mono">${i.codigo}</td><td>${statusBadge(i.status)}</td>
+    <td>${i.localizacao||'—'}</td><td>${i.destinatario||'—'}</td><td>${dt(i.criado_em)}</td></tr>`).join('');
+}
+
+async function renderRastreios() {
+  document.getElementById('pageContent').innerHTML = `
+    <div class="ph"><h1>Meus Rastreios</h1><p>Todas as consultas realizadas pela sua conta</p></div>
+    <div class="card">
+      <table><thead><tr><th>Código</th><th>Status</th><th>Localização</th><th>Transportadora</th><th>Destinatário</th><th>Data</th></tr></thead>
+      <tbody id="tblR"><tr><td colspan="6" style="text-align:center;padding:20px;color:var(--tx-3)">Carregando...</td></tr></tbody></table>
+    </div>`;
+  const data = await api('/cliente/rastreios');
+  const tbody = document.getElementById('tblR');
+  if(!data?.length) { tbody.innerHTML=`<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--tx-3)">Nenhum rastreio ainda</td></tr>`; return; }
+  tbody.innerHTML = data.map(i=>`<tr>
+    <td class="mono">${i.codigo}</td><td>${statusBadge(i.status)}</td>
+    <td>${i.localizacao||'—'}</td><td>${i.transportadora||'—'}</td>
+    <td>${i.destinatario||'—'}</td><td>${dt(i.criado_em)}</td></tr>`).join('');
+}
+
+async function renderApiKey() {
+  const p = await api('/cliente/perfil') || perfil;
+  document.getElementById('pageContent').innerHTML = `
+    <div class="ph"><h1>Minha API Key</h1><p>Use esta chave para integrar o ProspectIA Track ao seu sistema</p></div>
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-head"><div><div class="card-title">Credenciais da API</div><div class="card-sub">Não compartilhe esta chave</div></div><span class="plan-badge">${p?.plano||''}</span></div>
+      <div class="cp">
+        <div class="fg"><label>Sua API Key</label>
+          <div class="api-key-box">
+            <span class="api-key-val" id="apiKeyVal">${p?.api_key||''}</span>
+            <button class="btn btn-secondary" onclick="copiarKey()">Copiar</button>
+          </div>
+        </div>
+        <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-lg);padding:14px;margin-top:4px">
+          <div style="font-size:12px;font-weight:600;color:var(--tx-2);margin-bottom:8px">Como usar</div>
+          <div style="font-family:monospace;font-size:12px;color:var(--tx-3);line-height:1.8">
+            POST https://track.prospectia.space/rastrear<br>
+            Header: <span style="color:var(--blue-400)">X-Api-Key: ${(p?.api_key||'').substring(0,16)}...</span><br>
+            Body: {"codigo":"OU123456789BR","transportadora_id":1,"destinatario_email":"cliente@email.com"}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div><div class="card-title">Link de rastreio público</div><div class="card-sub">Envie para seus clientes</div></div></div>
+      <div class="cp">
+        <div class="fg"><label>URL da página de rastreio</label>
+          <div class="api-key-box">
+            <span class="api-key-val">https://track.prospectia.space/rastreio?codigo=CODIGO_DO_PEDIDO</span>
+            <button class="btn btn-secondary" onclick="copiar('https://track.prospectia.space/rastreio?codigo=CODIGO_DO_PEDIDO')">Copiar</button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+async function renderConfig() {
+  const p = await api('/cliente/perfil') || perfil;
+  document.getElementById('pageContent').innerHTML = `
+    <div class="ph"><h1>Configurações</h1><p>Canal de notificações da sua conta</p></div>
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-head"><div><div class="card-title">Canal de WhatsApp</div><div class="card-sub">Como seus clientes recebem notificações</div></div></div>
+      <div class="cp">
+        <div class="fg"><label>Provider</label>
+          <select class="inp" id="cfProvider">
+            <option value="evolution" ${p?.whatsapp_provider==='evolution'?'selected':''}>Evolution API (não-oficial)</option>
+            <option value="360dialog" ${p?.whatsapp_provider==='360dialog'?'selected':''}>360Dialog (WhatsApp Business oficial)</option>
+            <option value="none" ${p?.whatsapp_provider==='none'?'selected':''}>Desativado — só e-mail</option>
+          </select>
+        </div>
+        <div class="fg" id="cfKeyWrap"><label>API Key (360Dialog)</label><input class="inp" id="cfKey" type="password" placeholder="Sua chave da 360Dialog"></div>
+        <button class="btn btn-primary" onclick="salvarConfig()">Salvar</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div><div class="card-title">Segurança</div><div class="card-sub">Altere sua senha de acesso</div></div></div>
+      <div class="cp">
+        <div class="fg"><label>Nova senha</label><input class="inp" type="password" id="cfSenhaNova" placeholder="Mínimo 6 caracteres"></div>
+        <div class="fg"><label>Confirmar nova senha</label><input class="inp" type="password" id="cfSenhaConf" placeholder="Repita a senha"></div>
+        <button class="btn btn-secondary" onclick="salvarSenha()">Alterar senha</button>
+      </div>
+    </div>`;
+  document.getElementById('cfProvider').addEventListener('change', function() {
+    document.getElementById('cfKeyWrap').style.display = this.value==='360dialog' ? 'flex' : 'none';
+  });
+  document.getElementById('cfKeyWrap').style.display = p?.whatsapp_provider==='360dialog' ? 'flex' : 'none';
+}
+
+async function salvarConfig() {
+  const provider = document.getElementById('cfProvider').value;
+  const key = document.getElementById('cfKey')?.value || '';
+  await api('/cliente/config', {method:'POST', body:JSON.stringify({whatsapp_provider:provider, whatsapp_key:key})});
+  toast('Configuração salva!', 'green');
+}
+
+async function salvarSenha() {
+  const nova = document.getElementById('cfSenhaNova').value;
+  const conf = document.getElementById('cfSenhaConf').value;
+  if (nova !== conf) return toast('As senhas não conferem', 'red');
+  if (nova.length < 6) return toast('Mínimo 6 caracteres', 'red');
+  await api('/cliente/senha', {method:'POST', body:JSON.stringify({senha_nova: nova})});
+  document.getElementById('cfSenhaNova').value = '';
+  document.getElementById('cfSenhaConf').value = '';
+  toast('Senha alterada com sucesso!', 'green');
+}
+
+function copiarKey() { copiar(document.getElementById('apiKeyVal').textContent); }
+function copiar(txt) { navigator.clipboard.writeText(txt); toast('Copiado!', 'green'); }
+
+function toast(msg, tipo='green') {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = `toast toast-${tipo} show`;
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+function toggleTheme() {
+  const h = document.documentElement;
+  h.setAttribute('data-theme', h.getAttribute('data-theme')==='dark'?'light':'dark');
+}
+
+if (token && perfil) { mostrarApp(); }
+</script>
+</body>
+</html>
