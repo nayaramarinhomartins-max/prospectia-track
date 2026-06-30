@@ -6,6 +6,22 @@ Projeto 01 do portfólio de desafios dev — linguagem **Go (Golang)**.
 
 ---
 
+## Screenshots
+
+| Dashboard | Rastreios |
+|---|---|
+| ![Dashboard](screenshots/dashboard.png) | ![Rastreios](screenshots/rastreios.png) |
+
+| Transportadoras | Configurações |
+|---|---|
+| ![Transportadoras](screenshots/transportadoras.png) | ![Configurações](screenshots/configuracoes.png) |
+
+**Página pública de rastreio** (link enviado ao cliente final via WhatsApp/e-mail):
+
+![Rastreio público](screenshots/rastreio-publico.png)
+
+---
+
 ## Stack
 
 | Camada | Tecnologia |
